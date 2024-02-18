@@ -6,19 +6,45 @@
 
 package org.daijishou.retroachievements
 
+import kotlinx.coroutines.suspendCancellableCoroutine
+import okhttp3.Call
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.Response
+import org.daijishou.retroachievements.utils.AuthObject
+import org.daijishou.retroachievements.utils.ContinuationCallback
+import org.daijishou.retroachievements.utils.buildRequestUrl
+
 class RetroAchievementsClient {
+    companion object {
+        val API_BASE_URL = "https://retroachievements.org/API";
+    }
+    private val httpClient = OkHttpClient()
+    private var authObject: AuthObject? = null
     fun someLibraryMethod(): Boolean {
         return true
     }
 
-    fun buildAuthorization(userName: String, webApiKey: String): Boolean {
-        return true
+    internal suspend inline fun Call.await(): Response {
+        return suspendCancellableCoroutine { continuation ->
+            val callback = ContinuationCallback(this, continuation)
+            enqueue(callback)
+            continuation.invokeOnCancellation(callback)
+        }
+    }
+
+    fun setAuthorization(userName: String, webApiKey: String) {
+        authObject = AuthObject(userName, webApiKey)
     }
 
     // *** Users ***
     // Get a list of achievements earned by a user between two dates.
-    fun getAchievementsEarnedBetween() {
-
+    suspend fun getAchievementsEarnedBetween() {
+//        buildRequestUrl()
+        val request = Request.Builder()
+                .url("http://publicobject.com/helloworld.txt")
+                .build()
+        val result = httpClient.newCall(request).await()
     }
     // Get a list of achievements earned by a user on a given date.
     fun getAchievementsEarnedOnDay() {

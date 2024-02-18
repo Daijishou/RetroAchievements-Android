@@ -33,6 +33,8 @@ dependencies {
     // This dependency is used internally, and not exposed to consumers on their own compile classpath.
     implementation(libs.guava)
 
+    // Corountine
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0")
 
     // Http library
     implementation(platform("com.squareup.okhttp3:okhttp-bom:4.12.0"))
